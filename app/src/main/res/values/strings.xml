@@ -5,4 +5,9 @@
     values-round/strings.xml for round devices.
     -->
     <string name="hello_world">Hello Square World!</string>
+
+    <string name="latitude_format">Lat=%1$f</string>
+    <string name="longitude_format">Lon=%1$f</string>
+    <string name="timestamp_format">[ %1$d ] : %2$s</string>
+
 </resources>
