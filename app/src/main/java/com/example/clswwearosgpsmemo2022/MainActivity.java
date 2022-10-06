@@ -1,15 +1,14 @@
 package com.example.clswwearosgpsmemo2022;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.TextView;
 
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.wear.activity.ConfirmationActivity;
 import androidx.wear.widget.WearableLinearLayoutManager;
-import androidx.wear.widget.WearableRecyclerView;
 
 import com.example.clswwearosgpsmemo2022.databinding.ActivityMainBinding;
 
@@ -36,18 +35,25 @@ public class MainActivity extends Activity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        // dummy init for test purpose only
-        locations.add(makeLoc(42.12812921d, 6.22987212d));
-        locations.add(makeLoc(43.24648328d, 7.53783836d));
-        locations.add(makeLoc(44.39800122d, 8.40192765d));
-        locations.add(makeLoc(45.83232627d, 9.12763238d));
+        // Watch must have embedded physical GPS for the application to work
+        if (hasGps()) {
+            Log.d(LOG_TAG, "Found standalone GPS hardware");
+            // dummy init for test purpose only
+            locations.add(makeLoc(42.12812921d, 6.22987212d));
+            locations.add(makeLoc(43.24648328d, 7.53783836d));
+            locations.add(makeLoc(44.39800122d, 8.40192765d));
+            locations.add(makeLoc(45.83232627d, 9.12763238d));
 
-        // Wearable recycler view init
-        binding.gpsLocationWrv.setEdgeItemsCenteringEnabled(true);
-        binding.gpsLocationWrv.setLayoutManager(new WearableLinearLayoutManager(this));
-        adapter = new GpsLocationAdapter(locations,this);
-        binding.gpsLocationWrv.setAdapter(adapter);
+            // Wearable recycler view init
+            binding.gpsLocationWrv.setEdgeItemsCenteringEnabled(true);
+            binding.gpsLocationWrv.setLayoutManager(new WearableLinearLayoutManager(this));
+            adapter = new GpsLocationAdapter(locations,this);
+            binding.gpsLocationWrv.setAdapter(adapter);
 
+        } else {
+            Log.e(LOG_TAG, "This hardware doesn't have GPS.");
+            noGpsExitConfirmation();
+        }
     }
 
     /* *********************************************************************************************
@@ -55,9 +61,18 @@ public class MainActivity extends Activity {
      * *********************************************************************************************
      */
     private boolean hasGps() {
-        Log.d(LOG_TAG, "hasGps()");
         return getPackageManager().hasSystemFeature(PackageManager.FEATURE_LOCATION_GPS);
     }
+
+    public void noGpsExitConfirmation() {
+        Intent intent = new Intent(this, ConfirmationActivity.class);
+        intent.putExtra(ConfirmationActivity.EXTRA_ANIMATION_TYPE, ConfirmationActivity.FAILURE_ANIMATION);
+        intent.putExtra(ConfirmationActivity.EXTRA_ANIMATION_DURATION_MILLIS, 3000);
+        intent.putExtra(ConfirmationActivity.EXTRA_MESSAGE, getString(R.string.no_gps_message));
+        startActivity(intent);
+        finish();
+    }
+
 
     private Location makeLoc(double lat, double lon) {
         Location location = new Location(LOC_PROVIDER);
