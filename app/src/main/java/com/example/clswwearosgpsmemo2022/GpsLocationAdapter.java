@@ -39,7 +39,7 @@ public class GpsLocationAdapter extends WearableRecyclerView.Adapter<GpsLocation
     public void onBindViewHolder(@NonNull GpsLocationViewHolder holder, int position) {
         Location curItem = locations.get(position);
         Date date = new Date(curItem.getTime());
-        holder.binding.timeStampTv.setText(context.getString(R.string.timestamp_format,position+1, DateFormat.format(DMYHMS_DATE_FORMAT, date).toString()));
+        holder.binding.timeStampTv.setText(context.getString(R.string.timestamp_format, DateFormat.format(DMYHMS_DATE_FORMAT, date).toString()));
         holder.binding.latitudeTv.setText(context.getString(R.string.latitude_format, curItem.getLatitude()));
         holder.binding.longitudeTv.setText(context.getString(R.string.longitude_format, curItem.getLongitude()));
     }

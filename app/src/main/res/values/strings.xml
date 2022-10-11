@@ -3,7 +3,7 @@
 
     <string name="latitude_format">Lat=%1$f</string>
     <string name="longitude_format">Lon=%1$f</string>
-    <string name="timestamp_format">[ %1$d ] : %2$s</string>
+    <string name="timestamp_format">T=%1$s</string>
     <string name="no_gps_message">No GPS found</string>
 
 </resources>
